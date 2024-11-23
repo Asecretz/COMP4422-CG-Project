@@ -1,10 +1,15 @@
 import * as THREE from "three";
 
-export default class Planet {
-  constructor(radius, positionX, textureFile) {
-    this.radius = radius;
-    this.positionX = positionX;
-    this.textureFile = textureFile;
+export default class PlanetWithLighting {
+  constructor(radius, distance, texturePath) {
+    const geometry = new THREE.SphereGeometry(radius);
+    const texture = new THREE.TextureLoader().load(texturePath);
+    const material = new THREE.MeshPhongMaterial({
+      map: texture,
+      shininess: 5,
+    });
+    this.mesh = new THREE.Mesh(geometry, material);
+    this.mesh.position.x = distance;
   }
 
   getMesh() {

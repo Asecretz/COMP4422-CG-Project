@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { useEffect } from "react";
 import SceneInit from "./lib/SceneInit";
-import Planet from "./lib/Planet";
+import PlanetWithLighting from "./lib/PlanetWithLighting";
 import Rotation from "./lib/Rotation";
 
 export default function Home() {
@@ -18,36 +18,51 @@ export default function Home() {
     test.initScene();
     test.animate();
 
+    // Add skybox
+    const textureLoader = new THREE.TextureLoader();
+    const backgroundTexture = textureLoader.load('/solarsystemscope/2k_stars_milky_way.jpg');
+    test.scene.background = backgroundTexture;
+
+    // Add ambient light (very dim, for slight visibility on dark side)
+    const ambientLight = new THREE.AmbientLight(0x111111);
+    test.scene.add(ambientLight);
+
+    // Add directional light from the sun's position
+    const sunLight = new THREE.PointLight(0xffffff, 2, 300);
+    sunLight.position.set(0, 0, 0);
+    test.scene.add(sunLight);
+
     const sunGeometry = new THREE.SphereGeometry(8);
-    const sunTexture = new THREE.TextureLoader().load("sun.jpeg");
+    const sunTexture = new THREE.TextureLoader().load("solarsystemscope/2k_sun.jpg");
     const sunMaterial = new THREE.MeshBasicMaterial({ map: sunTexture });
     const sunMesh = new THREE.Mesh(sunGeometry, sunMaterial);
     const solarSystem = new THREE.Group();
     solarSystem.add(sunMesh);
     test.scene.add(solarSystem);
 
-    const mercury = new Planet(2, 16, "mercury.png");
+    const mercury = new PlanetWithLighting(2, 16, "solarsystemscope/2k_mercury.jpg");
     const mercuryMesh = mercury.getMesh();
     let mercurySystem = new THREE.Group();
     mercurySystem.add(mercuryMesh);
 
-    const venus = new Planet(3, 32, "venus.jpeg");
+    const venus = new PlanetWithLighting(3, 32, "solarsystemscope/2k_venus_atmosphere.jpg");
     const venusMesh = venus.getMesh();
     let venusSystem = new THREE.Group();
     venusSystem.add(venusMesh);
 
-    const earth = new Planet(4, 48, "earth.jpeg");
+    const earth = new PlanetWithLighting(4, 48, "solarsystemscope/2k_earth_daymap.jpg");
     const earthMesh = earth.getMesh();
     let earthSystem = new THREE.Group();
     earthSystem.add(earthMesh);
 
-    const mars = new Planet(3, 64, "mars.jpeg");
+    const mars = new PlanetWithLighting(3, 64, "solarsystemscope/2k_mars.jpg");
     const marsMesh = mars.getMesh();
     let marsSystem = new THREE.Group();
     marsSystem.add(marsMesh);
 
     solarSystem.add(mercurySystem, venusSystem, earthSystem, marsSystem);
 
+    // Add self-rotation to planets
     const mercuryRotation = new Rotation(mercuryMesh);
     const mercuryRotationMesh = mercuryRotation.getMesh();
     mercurySystem.add(mercuryRotationMesh);
@@ -77,6 +92,13 @@ export default function Home() {
       venusSystem.rotation.y += EARTH_YEAR * 2;
       earthSystem.rotation.y += EARTH_YEAR;
       marsSystem.rotation.y += EARTH_YEAR * 0.5;
+
+    // Self-rotation of planets
+    mercuryMesh.rotation.y += 0.02;
+    venusMesh.rotation.y += 0.02;
+    earthMesh.rotation.y += 0.02;
+    marsMesh.rotation.y += 0.02;
+
       requestAnimationFrame(animate);
     };
     animate();
