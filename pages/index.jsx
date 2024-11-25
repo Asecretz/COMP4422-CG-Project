@@ -40,27 +40,33 @@ export default function Home() {
     solarSystem.add(sunMesh);
     test.scene.add(solarSystem);
 
-    const mercury = new PlanetWithLighting(2, 16, "solarsystemscope/2k_mercury.jpg");
+    const mercury = new PlanetWithLighting(2, 32, "solarsystemscope/2k_mercury.jpg");
     const mercuryMesh = mercury.getMesh();
     let mercurySystem = new THREE.Group();
     mercurySystem.add(mercuryMesh);
 
-    const venus = new PlanetWithLighting(3, 32, "solarsystemscope/2k_venus_atmosphere.jpg");
+    const venus = new PlanetWithLighting(3, 64, "solarsystemscope/2k_venus_atmosphere.jpg");
     const venusMesh = venus.getMesh();
     let venusSystem = new THREE.Group();
     venusSystem.add(venusMesh);
 
-    const earth = new PlanetWithLighting(4, 48, "solarsystemscope/2k_earth_daymap.jpg");
+    const earth = new PlanetWithLighting(3, 96, "solarsystemscope/2k_earth_daymap.jpg");
     const earthMesh = earth.getMesh();
     let earthSystem = new THREE.Group();
     earthSystem.add(earthMesh);
 
-    const mars = new PlanetWithLighting(3, 64, "solarsystemscope/2k_mars.jpg");
+    const moon = new PlanetWithLighting(1, 96, "solarsystemscope/2k_moon.jpg");
+    const moonMesh = moon.getMesh();
+    let moonSystem = new THREE.Group();
+    moonSystem.add(moonMesh);
+  
+
+    const mars = new PlanetWithLighting(3, 128, "solarsystemscope/2k_mars.jpg");
     const marsMesh = mars.getMesh();
     let marsSystem = new THREE.Group();
     marsSystem.add(marsMesh);
 
-    solarSystem.add(mercurySystem, venusSystem, earthSystem, marsSystem);
+    solarSystem.add(mercurySystem, venusSystem, earthSystem, marsSystem, moonSystem);
 
     // Add self-rotation to planets
     const mercuryRotation = new Rotation(mercuryMesh);
@@ -72,9 +78,13 @@ export default function Home() {
     const earthRotation = new Rotation(earthMesh);
     const earthRotationMesh = earthRotation.getMesh();
     earthSystem.add(earthRotationMesh);
+    const moonRotation = new Rotation(moonMesh);
+    const moonRotationMesh = moonRotation.getMesh();
+    moonSystem.add(moonRotationMesh);
     const marsRotation = new Rotation(marsMesh);
     const marsRotationMesh = marsRotation.getMesh();
     marsSystem.add(marsRotationMesh);
+    
 
     // NOTE: Add solar system mesh GUI.
     await initGui();
@@ -82,6 +92,7 @@ export default function Home() {
     solarSystemGui.add(mercuryRotationMesh, "visible").name("mercury").listen();
     solarSystemGui.add(venusRotationMesh, "visible").name("venus").listen();
     solarSystemGui.add(earthRotationMesh, "visible").name("earth").listen();
+    solarSystemGui.add(moonRotationMesh, "visible").name("moon").listen();
     solarSystemGui.add(marsRotationMesh, "visible").name("mars").listen();
 
     // NOTE: Animate solar system at 60fps.
@@ -92,11 +103,15 @@ export default function Home() {
       venusSystem.rotation.y += EARTH_YEAR * 2;
       earthSystem.rotation.y += EARTH_YEAR;
       marsSystem.rotation.y += EARTH_YEAR * 0.5;
+      moonSystem.rotation.y += EARTH_YEAR;
+      moonSystem.position.z = -Math.cos(sunMesh.rotation.y*16)* 10;//cos(rotation.y*a)*b, a = orbit speed, b = radius
+      moonSystem.position.x = -Math.sin(sunMesh.rotation.y*16)* 10;
 
     // Self-rotation of planets
     mercuryMesh.rotation.y += 0.02;
     venusMesh.rotation.y += 0.02;
     earthMesh.rotation.y += 0.02;
+    moonMesh.rotation.y += 0.02;
     marsMesh.rotation.y += 0.02;
 
       requestAnimationFrame(animate);
