@@ -5,15 +5,7 @@ import PlanetWithLighting from "./lib/PlanetWithLighting";
 import Rotation from "./lib/Rotation";
 
 export default function Home() {
-  let gui;
-
-  const initGui = async () => {
-    const dat = await import("dat.gui");
-    gui = new dat.GUI();
-  };
-
   useEffect(async () => {
-    // TODO: Understand this code later.
     let test = new SceneInit();
     test.initScene();
     test.animate();
@@ -59,60 +51,121 @@ export default function Home() {
     const moonMesh = moon.getMesh();
     let moonSystem = new THREE.Group();
     moonSystem.add(moonMesh);
-  
 
     const mars = new PlanetWithLighting(3, 128, "solarsystemscope/2k_mars.jpg");
     const marsMesh = mars.getMesh();
     let marsSystem = new THREE.Group();
     marsSystem.add(marsMesh);
 
-    solarSystem.add(mercurySystem, venusSystem, earthSystem, marsSystem, moonSystem);
+    const jupiter = new PlanetWithLighting(5, 160, "solarsystemscope/2k_jupiter.jpg");
+    const jupiterMesh = jupiter.getMesh();
+    let jupiterSystem = new THREE.Group();
+    jupiterSystem.add(jupiterMesh);
+    
+    const saturn = new PlanetWithLighting(5, 192, "solarsystemscope/2k_saturn.jpg");
+    const saturnMesh = saturn.getMesh();
+    let saturnSystem = new THREE.Group();
+    saturnSystem.add(saturnMesh);
+
+    // Create Saturn's ring
+    const ringGeometry = new THREE.RingGeometry(10, 20, 64); // inner radius, outer radius, segments
+    const ringTexture = textureLoader.load("solarsystemscope/2k_saturn_ring_alpha.png");
+    const ringMaterial = new THREE.MeshBasicMaterial({ 
+        map: ringTexture,
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: 0.8
+    });
+    const ringMesh = new THREE.Mesh(ringGeometry, ringMaterial);
+    ringMesh.rotation.x = Math.PI / 2; // Rotate ring to be horizontal
+    let ringSystem = new THREE.Group();
+    ringSystem.add(ringMesh);
+
+    const uranus = new PlanetWithLighting(4, 224, "solarsystemscope/2k_uranus.jpg");
+    const uranusMesh = uranus.getMesh();
+    let uranusSystem = new THREE.Group();
+    uranusSystem.add(uranusMesh);
+
+    const neptune = new PlanetWithLighting(4, 256, "solarsystemscope/2k_neptune.jpg");
+    const neptuneMesh = neptune.getMesh();
+    let neptuneSystem = new THREE.Group();
+    neptuneSystem.add(neptuneMesh);
+
+    // Bug here (I don't know how to add a ring of saturn)
+    // So I open a new branch for reference
+    // saturnSystem.add(ringSystem);
+    solarSystem.add(mercurySystem, venusSystem, earthSystem, moonSystem, marsSystem, jupiterSystem, saturnSystem, uranusSystem, neptuneSystem);
 
     // Add self-rotation to planets
     const mercuryRotation = new Rotation(mercuryMesh);
     const mercuryRotationMesh = mercuryRotation.getMesh();
     mercurySystem.add(mercuryRotationMesh);
+
     const venusRotation = new Rotation(venusMesh);
     const venusRotationMesh = venusRotation.getMesh();
     venusSystem.add(venusRotationMesh);
+
     const earthRotation = new Rotation(earthMesh);
     const earthRotationMesh = earthRotation.getMesh();
     earthSystem.add(earthRotationMesh);
+
     const moonRotation = new Rotation(moonMesh);
     const moonRotationMesh = moonRotation.getMesh();
     moonSystem.add(moonRotationMesh);
+
     const marsRotation = new Rotation(marsMesh);
     const marsRotationMesh = marsRotation.getMesh();
     marsSystem.add(marsRotationMesh);
-    
 
-    // NOTE: Add solar system mesh GUI.
-    await initGui();
-    const solarSystemGui = gui.addFolder("solar system");
-    solarSystemGui.add(mercuryRotationMesh, "visible").name("mercury").listen();
-    solarSystemGui.add(venusRotationMesh, "visible").name("venus").listen();
-    solarSystemGui.add(earthRotationMesh, "visible").name("earth").listen();
-    solarSystemGui.add(moonRotationMesh, "visible").name("moon").listen();
-    solarSystemGui.add(marsRotationMesh, "visible").name("mars").listen();
+    const jupiterRotation = new Rotation(jupiterMesh);
+    const jupiterRotationMesh = jupiterRotation.getMesh();
+    jupiterSystem.add(jupiterRotationMesh);
+
+    const saturnRotation = new Rotation(saturnMesh);
+    const saturnRotationMesh = saturnRotation.getMesh();
+    saturnSystem.add(saturnRotationMesh);
+
+    const uranusRotation = new Rotation(uranusMesh);
+    const uranusRotationMesh = uranusRotation.getMesh();
+    uranusSystem.add(uranusRotationMesh);
+
+    const neptuneRotation = new Rotation(neptuneMesh);
+    const neptuneRotationMesh = neptuneRotation.getMesh();
+    neptuneSystem.add(neptuneRotationMesh);
 
     // NOTE: Animate solar system at 60fps.
     const EARTH_YEAR = 2 * Math.PI * (1 / 60) * (1 / 60);
     const animate = () => {
       sunMesh.rotation.y += 0.001;
-      mercurySystem.rotation.y += EARTH_YEAR * 4;
-      venusSystem.rotation.y += EARTH_YEAR * 2;
-      earthSystem.rotation.y += EARTH_YEAR;
-      marsSystem.rotation.y += EARTH_YEAR * 0.5;
-      moonSystem.rotation.y += EARTH_YEAR;
-      moonSystem.position.z = -Math.cos(sunMesh.rotation.y*16)* 10;//cos(rotation.y*a)*b, a = orbit speed, b = radius
-      moonSystem.position.x = -Math.sin(sunMesh.rotation.y*16)* 10;
 
-    // Self-rotation of planets
-    mercuryMesh.rotation.y += 0.02;
-    venusMesh.rotation.y += 0.02;
-    earthMesh.rotation.y += 0.02;
-    moonMesh.rotation.y += 0.02;
-    marsMesh.rotation.y += 0.02;
+      mercurySystem.rotation.y += EARTH_YEAR * 4;
+      mercuryMesh.rotation.y += 0.02;
+
+      venusSystem.rotation.y += EARTH_YEAR * 1.6;
+      venusMesh.rotation.y += 0.02;
+
+      earthSystem.rotation.y += EARTH_YEAR;
+      earthMesh.rotation.y += 0.02;
+
+      marsSystem.rotation.y += EARTH_YEAR * 0.5;
+      marsMesh.rotation.y += 0.02;
+
+      moonSystem.rotation.y += EARTH_YEAR;
+      moonSystem.position.z = -Math.cos(sunMesh.rotation.y*16)* 10; //cos(rotation.y*a)*b, a = orbit speed, b = radius
+      moonSystem.position.x = -Math.sin(sunMesh.rotation.y*16)* 10;
+      moonMesh.rotation.y += 0.02;
+
+      jupiterSystem.rotation.y += EARTH_YEAR * 0.08;
+      jupiterMesh.rotation.y += 0.02;
+
+      saturnSystem.rotation.y += EARTH_YEAR * 0.03;
+      saturnMesh.rotation.y += 0.02;
+
+      uranusSystem.rotation.y += EARTH_YEAR * 0.012;
+      uranusMesh.rotation.y += 0.02;
+
+      neptuneSystem.rotation.y += EARTH_YEAR * 0.006;
+      neptuneMesh.rotation.y += 0.02;
 
       requestAnimationFrame(animate);
     };
