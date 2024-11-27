@@ -68,7 +68,7 @@ export default function Home() {
     saturnSystem.add(saturnMesh);
 
     // Create Saturn's ring
-    const ringGeometry = new THREE.RingGeometry(10, 20, 64); // inner radius, outer radius, segments
+    const ringGeometry = new THREE.RingGeometry(10, 11, 64); // inner radius, outer radius, segments
     const ringTexture = textureLoader.load("solarsystemscope/2k_saturn_ring_alpha.png");
     const ringMaterial = new THREE.MeshBasicMaterial({ 
         map: ringTexture,
@@ -78,6 +78,7 @@ export default function Home() {
     });
     const ringMesh = new THREE.Mesh(ringGeometry, ringMaterial);
     ringMesh.rotation.x = Math.PI / 2; // Rotate ring to be horizontal
+    ringMesh.position.x = 192;
     let ringSystem = new THREE.Group();
     ringSystem.add(ringMesh);
 
@@ -91,10 +92,7 @@ export default function Home() {
     let neptuneSystem = new THREE.Group();
     neptuneSystem.add(neptuneMesh);
 
-    // Bug here (I don't know how to add a ring of saturn)
-    // So I open a new branch for reference
-    // saturnSystem.add(ringSystem);
-    solarSystem.add(mercurySystem, venusSystem, earthSystem, moonSystem, marsSystem, jupiterSystem, saturnSystem, uranusSystem, neptuneSystem);
+    solarSystem.add(mercurySystem, venusSystem, earthSystem, moonSystem, marsSystem, jupiterSystem, saturnSystem, ringSystem, uranusSystem, neptuneSystem);
 
     // Add self-rotation to planets
     const mercuryRotation = new Rotation(mercuryMesh);
@@ -160,6 +158,8 @@ export default function Home() {
 
       saturnSystem.rotation.y += EARTH_YEAR * 0.03;
       saturnMesh.rotation.y += 0.02;
+
+      ringSystem.rotation.y += EARTH_YEAR * 0.03;
 
       uranusSystem.rotation.y += EARTH_YEAR * 0.012;
       uranusMesh.rotation.y += 0.02;
