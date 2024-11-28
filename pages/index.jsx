@@ -92,7 +92,33 @@ export default function Home() {
     let neptuneSystem = new THREE.Group();
     neptuneSystem.add(neptuneMesh);
 
-    solarSystem.add(mercurySystem, venusSystem, earthSystem, moonSystem, marsSystem, jupiterSystem, saturnSystem, ringSystem, uranusSystem, neptuneSystem);
+    // Create a sphere
+    const sphereRadius = 10;
+    const spiralPoints = 1000; // Number of points in the spiral
+    const pointsGeometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(spiralPoints * 3); // 3 coordinates for each point
+
+    for (let i = 0; i < spiralPoints; i++) {
+      const theta = i * (Math.PI / 5); // Angle in radians
+      const phi = i * (Math.PI / 100); // Angle for vertical position
+      const x = sphereRadius * Math.sin(phi) * Math.cos(theta);
+      const y = sphereRadius * Math.sin(phi) * Math.sin(theta);
+      const z = sphereRadius * Math.cos(phi);
+
+      positions.set([x, y, z], i * 3);
+    }
+
+    pointsGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+    const pointsMaterial = new THREE.PointsMaterial({
+      color: 0x888888,
+      size: 1, // Size of points
+      sizeAttenuation: true
+    });
+
+    const points = new THREE.Points(pointsGeometry, pointsMaterial);
+
+    solarSystem.add(mercurySystem, venusSystem, earthSystem, moonSystem, marsSystem, jupiterSystem, saturnSystem, ringSystem, uranusSystem, neptuneSystem, points);
 
     // Add self-rotation to planets
     const mercuryRotation = new Rotation(mercuryMesh);
@@ -166,6 +192,9 @@ export default function Home() {
 
       neptuneSystem.rotation.y += EARTH_YEAR * 0.006;
       neptuneMesh.rotation.y += 0.02;
+
+      points.rotation.y -= 0.005; // Rotate the points
+      points.rotation.x -= 0.005;
 
       requestAnimationFrame(animate);
     };
