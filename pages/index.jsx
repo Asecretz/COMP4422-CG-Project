@@ -86,12 +86,12 @@ export default function Home() {
     let marsSystem = new THREE.Group();
     marsSystem.add(marsMesh);
 
-    const jupiter = new PlanetWithLighting(5, 160, "solarsystemscope/2k_jupiter.jpg");
+    const jupiter = new PlanetWithLighting(10, 160, "solarsystemscope/2k_jupiter.jpg");
     const jupiterMesh = jupiter.getMesh();
     let jupiterSystem = new THREE.Group();
     jupiterSystem.add(jupiterMesh);
     
-    const saturn = new PlanetWithLighting(5, 192, "solarsystemscope/2k_saturn.jpg");
+    const saturn = new PlanetWithLighting(7, 192, "solarsystemscope/2k_saturn.jpg");
     const saturnMesh = saturn.getMesh();
     let saturnSystem = new THREE.Group();
     saturnSystem.add(saturnMesh);
@@ -111,12 +111,12 @@ export default function Home() {
     let ringSystem = new THREE.Group();
     ringSystem.add(ringMesh);
 
-    const uranus = new PlanetWithLighting(4, 224, "solarsystemscope/2k_uranus.jpg");
+    const uranus = new PlanetWithLighting(6, 224, "solarsystemscope/2k_uranus.jpg");
     const uranusMesh = uranus.getMesh();
     let uranusSystem = new THREE.Group();
     uranusSystem.add(uranusMesh);
 
-    const neptune = new PlanetWithLighting(4, 256, "solarsystemscope/2k_neptune.jpg");
+    const neptune = new PlanetWithLighting(6, 256, "solarsystemscope/2k_neptune.jpg");
     const neptuneMesh = neptune.getMesh();
     let neptuneSystem = new THREE.Group();
     neptuneSystem.add(neptuneMesh);
