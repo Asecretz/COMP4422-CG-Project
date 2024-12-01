@@ -1,4 +1,5 @@
 {
+  "homepage": "https://Asecretz.github.io/COMP4422-CG-Project",
   "private": true,
   "scripts": {
     "dev": "next dev",
