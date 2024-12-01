@@ -32,35 +32,6 @@ export default function Home() {
     solarSystem.add(sunMesh);
     test.scene.add(solarSystem);
 
-        // Create a sphere
-        const sphereRadius = 10;
-        const spiralPoints = 1000; // Number of points in the spiral
-        const pointsGeometry = new THREE.BufferGeometry();
-        const positions = new Float32Array(spiralPoints * 3); // 3 coordinates for each point
-    
-        for (let i = 0; i < spiralPoints; i++) {
-          const theta = i * (Math.PI / 5); // Angle in radians
-          const phi = i * (Math.PI / 100); // Angle for vertical position
-          const x = sphereRadius * Math.sin(phi) * Math.cos(theta);
-          const y = sphereRadius * Math.sin(phi) * Math.sin(theta);
-          const z = sphereRadius * Math.cos(phi);
-    
-          positions.set([x, y, z], i * 3);
-        }
-    
-        pointsGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    
-        const pointsMaterial = new THREE.PointsMaterial({
-          color: 0x888888,
-          size: 1, // Size of points
-          sizeAttenuation: true
-        });
-    
-        const points = new THREE.Points(pointsGeometry, pointsMaterial);
-    
-        const points2 = new THREE.Points(pointsGeometry, pointsMaterial);
-    
-
     const mercury = new PlanetWithLighting(2, 32, "solarsystemscope/2k_mercury.jpg");
     const mercuryMesh = mercury.getMesh();
     let mercurySystem = new THREE.Group();
@@ -86,12 +57,12 @@ export default function Home() {
     let marsSystem = new THREE.Group();
     marsSystem.add(marsMesh);
 
-    const jupiter = new PlanetWithLighting(10, 160, "solarsystemscope/2k_jupiter.jpg");
+    const jupiter = new PlanetWithLighting(5, 160, "solarsystemscope/2k_jupiter.jpg");
     const jupiterMesh = jupiter.getMesh();
     let jupiterSystem = new THREE.Group();
     jupiterSystem.add(jupiterMesh);
     
-    const saturn = new PlanetWithLighting(7, 192, "solarsystemscope/2k_saturn.jpg");
+    const saturn = new PlanetWithLighting(5, 192, "solarsystemscope/2k_saturn.jpg");
     const saturnMesh = saturn.getMesh();
     let saturnSystem = new THREE.Group();
     saturnSystem.add(saturnMesh);
@@ -111,18 +82,43 @@ export default function Home() {
     let ringSystem = new THREE.Group();
     ringSystem.add(ringMesh);
 
-    const uranus = new PlanetWithLighting(6, 224, "solarsystemscope/2k_uranus.jpg");
+    const uranus = new PlanetWithLighting(4, 224, "solarsystemscope/2k_uranus.jpg");
     const uranusMesh = uranus.getMesh();
     let uranusSystem = new THREE.Group();
     uranusSystem.add(uranusMesh);
 
-    const neptune = new PlanetWithLighting(6, 256, "solarsystemscope/2k_neptune.jpg");
+    const neptune = new PlanetWithLighting(4, 256, "solarsystemscope/2k_neptune.jpg");
     const neptuneMesh = neptune.getMesh();
     let neptuneSystem = new THREE.Group();
     neptuneSystem.add(neptuneMesh);
 
+    // Create a sphere
+    const sphereRadius = 10;
+    const spiralPoints = 1000; // Number of points in the spiral
+    const pointsGeometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(spiralPoints * 3); // 3 coordinates for each point
 
-    solarSystem.add(mercurySystem, venusSystem, earthSystem, moonSystem, marsSystem, jupiterSystem, saturnSystem, ringSystem, uranusSystem, neptuneSystem, points, points2);
+    for (let i = 0; i < spiralPoints; i++) {
+      const theta = i * (Math.PI / 5); // Angle in radians
+      const phi = i * (Math.PI / 100); // Angle for vertical position
+      const x = sphereRadius * Math.sin(phi) * Math.cos(theta);
+      const y = sphereRadius * Math.sin(phi) * Math.sin(theta);
+      const z = sphereRadius * Math.cos(phi);
+
+      positions.set([x, y, z], i * 3);
+    }
+
+    pointsGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+    const pointsMaterial = new THREE.PointsMaterial({
+      color: 0x888888,
+      size: 1, // Size of points
+      sizeAttenuation: true
+    });
+
+    const points = new THREE.Points(pointsGeometry, pointsMaterial);
+
+    solarSystem.add(mercurySystem, venusSystem, earthSystem, moonSystem, marsSystem, jupiterSystem, saturnSystem, ringSystem, uranusSystem, neptuneSystem, points);
 
     // Add self-rotation to planets
     const mercuryRotation = new Rotation(mercuryMesh);
@@ -199,14 +195,6 @@ export default function Home() {
 
       points.rotation.y -= 0.005; // Rotate the points
       points.rotation.x -= 0.005;
-
-      points2.position.z = -Math.cos(earthSystem.rotation.y-1.57)* 96; //cos(rotation.y*a)*b, a = orbit speed, b = radius
-      points2.position.x = -Math.sin(earthSystem.rotation.y-1.57)* 96;
-      points2.scale.x = 0.35;
-      points2.scale.y = 0.35;
-      points2.scale.z = 0.35;
-      points2.rotation.y -= 1; // Rotate the points
-      points2.rotation.x -= 1;
 
       requestAnimationFrame(animate);
     };
