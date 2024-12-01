@@ -1,8 +1,8 @@
 import * as THREE from "three";
 import { useEffect } from "react";
-import SceneInit from "./lib/SceneInit";
-import PlanetWithLighting from "./lib/PlanetWithLighting";
-import Rotation from "./lib/Rotation";
+import SceneInit from "../lib/SceneInit";
+import PlanetWithLighting from "../lib/PlanetWithLighting";
+import Rotation from "../lib/Rotation";
 
 export default function Home() {
   useEffect(async () => {
