@@ -5,13 +5,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d pages"
   },
   "dependencies": {
     "dat.gui": "^0.7.7",
-    "next": "latest",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "next": "^15.0.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "three": "^0.134.0"
   },
   "devDependencies": {
